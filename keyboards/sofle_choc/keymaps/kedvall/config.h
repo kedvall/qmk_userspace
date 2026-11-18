@@ -40,3 +40,21 @@
 #define SPLIT_WPM_ENABLE         // typing speed (Luna, Bongo Cat, WPM graph)
 #define SPLIT_OLED_ENABLE        // both screens wake/sleep together
 #define SPLIT_TRANSACTION_IDS_USER USER_SYNC_OLED // our own data: screen mode + Luna jumps
+
+// ---- HW-467AB controller workaround ----
+// The clone controller's GP26-GP29 pads are faulty, so those four lines are hand-wired to other GPIOs on both halves.
+// Raw GPIO numbers are used because the Pro Micro pin names have no equivalent for them under CONVERT_TO=rp2040_ce.
+// Matrix: F6 (GP27) -> GP15, F7 (GP26) -> GP16
+#undef MATRIX_COL_PINS
+#define MATRIX_COL_PINS { 15U, 16U, B1, B3, B2, B6 }
+
+// Encoders: F5 (GP28) -> GP14, F4 (GP29) -> GP13. The right half's A/B are swapped relative to the left in
+// keyboard.json, so it needs its own defines to follow the same rewire.
+#undef ENCODER_A_PINS
+#undef ENCODER_B_PINS
+#undef ENCODER_A_PINS_RIGHT
+#undef ENCODER_B_PINS_RIGHT
+#define ENCODER_A_PINS { 14U }
+#define ENCODER_B_PINS { 13U }
+#define ENCODER_A_PINS_RIGHT { 13U }
+#define ENCODER_B_PINS_RIGHT { 14U }
