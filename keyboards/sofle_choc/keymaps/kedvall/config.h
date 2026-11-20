@@ -28,6 +28,14 @@
 #define SPLIT_TRANSPORT_MIRROR             // If LED_MATRIX_KEYPRESSES or LED_MATRIX_KEYRELEASES is enabled, you also will want to enable SPLIT_TRANSPORT_MIRROR
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 100  // limits maximum brightness of LEDs (max 255). Higher may cause the controller to crash.
 
+// ---- Thumb keys: tap for Enter/Space, hold for NAV/SYM ----
+// Held longer than this = layer; shorter = Enter/Space.
+#define TAPPING_TERM 175
+// Also counts as held if another key is pressed AND released while the thumb
+// key is still down (e.g. hold SYM, tap 1, release SYM -> "!"), even if quicker
+// than TAPPING_TERM. Normal typing rolls (Space released first) stay as Space.
+#define PERMISSIVE_HOLD
+
 // ---- OLEDs (see oled.c) ----
 // Screens stay on for 30 min after the last keypress. They also switch off
 // whenever the Mac sleeps (USB suspend), so this only matters while it's awake.
