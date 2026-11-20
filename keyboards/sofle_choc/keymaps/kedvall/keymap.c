@@ -17,6 +17,7 @@ enum layers {
 
 enum custom_keycodes {
     OLED_NXT = QK_USER, // cycle the right screen: Luna -> Bongo Cat -> WPM -> cheat sheet
+    CORNE,              // Corne mode on/off (saved, so it survives unplugging)
 };
 
 #include "oled.c" // screens; uses the layer names above
@@ -26,7 +27,6 @@ enum custom_keycodes {
 #define SYM_SPC LT(_SYM, KC_SPC)
 #define QWERTY  PDF(_QWERTY)   // persistent default layer (saved to EEPROM)
 #define COLEMAK PDF(_COLEMAK)
-#define CORNE   TG(_CORNE)     // Corne mode on/off (not saved; off after unplugging)
 
 #define TMUX    C(KC_B)       // tmux prefix (Ctrl-B)
 
@@ -166,6 +166,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case OLED_NXT:
             if (record->event.pressed) oled_next_mode();
             return false; // handled, nothing to send to the computer
+        case CORNE:
+            if (record->event.pressed) {
+                layer_invert(_CORNE);
+                user_config.corne = layer_state_is(_CORNE);
+                eeconfig_update_user(user_config.raw);
+            }
+            return false;
         case KC_SPC:
             if (record->event.pressed) oled_space_pressed();
             return true; // still type the space
@@ -177,7 +184,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void keyboard_post_init_user(void) {
-    oled_post_init_user();
+    oled_post_init_user(); // also loads user_config from EEPROM
+    if (user_config.corne) layer_on(_CORNE);
 }
 
 void housekeeping_task_user(void) {

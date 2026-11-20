@@ -32,6 +32,7 @@ typedef union {
     uint32_t raw;
     struct {
         uint8_t oled_mode;
+        uint8_t corne; // Corne mode on (see keymap.c)
     };
 } user_config_t;
 
