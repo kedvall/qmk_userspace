@@ -228,6 +228,7 @@ static void render_status(void) {
         case _NAV:    layer_name = "NAV"; break;
         case _SYM:    layer_name = "SYM"; break;
         case _ADJUST: layer_name = "ADJUST"; break;
+        case _CORNE:  layer_name = "CORNE"; break;
         default:      layer_name = "BASE"; break;
     }
     draw_str2x(0, 0, layer_name);
@@ -276,11 +277,11 @@ static const cheat_sheet_t sym_sheet = {{
     {' ',   '=', '-', '+', '{', '}',              '[', ']', ';', ':', '\\', ' '},
 }, "F12 F1-F5", "F6-F11"};
 
-// Boxed letters are "special": Boot, QWERTY, Colemak, OLED mode.
+// Boxed letters are "special": Boot, QWERTY, Colemak, OLED mode, c = Corne mode on/off.
 // RGB: * on/off, H/h hue, S/s saturation, B/b brightness, >/< effect.
 static const cheat_sheet_t adjust_sheet = {{
     {' ',       ' ', ' ',       ' ',       ' ',       ' ',     ' ', ' ',    ' ',    ' ',    ' ', ' '},
-    {'!' | INV, ' ', 'Q' | INV, 'C' | INV, 'O' | INV, ' ',     ' ', ' ',    ' ',    ' ',    ' ', ' '},
+    {'!' | INV, ' ', 'Q' | INV, 'C' | INV, 'O' | INV, 'c' | INV, ' ', ' ',    ' ',    ' ',    ' ', ' '},
     {'*',       'H', 'S',       'B',       '>',       ' ',     ' ', '-',    'x',    '+',    ' ', ' '},
     {' ',       'h', 's',       'b',       '<',       ' ',     ' ', G_PREV, 'p',    G_PLAY, ' ', ' '},
 }, NULL, NULL};

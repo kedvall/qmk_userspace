@@ -9,6 +9,7 @@
 enum layers {
     _QWERTY,
     _COLEMAK,
+    _CORNE,  // optional overlay on either base: Corne-size practice (toggle on ADJUST)
     _NAV,    // red
     _SYM,    // blue
     _ADJUST, // NAV + SYM held together
@@ -25,6 +26,7 @@ enum custom_keycodes {
 #define SYM_SPC LT(_SYM, KC_SPC)
 #define QWERTY  PDF(_QWERTY)   // persistent default layer (saved to EEPROM)
 #define COLEMAK PDF(_COLEMAK)
+#define CORNE   TG(_CORNE)     // Corne mode on/off (not saved; off after unplugging)
 
 #define TMUX    C(KC_B)       // tmux prefix (Ctrl-B)
 
@@ -70,6 +72,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                        KC_H,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_MUTE,   KC_MPLY, KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
                       KC_LCTL, KC_LOPT, KC_LCMD, NAV_ENT, KC_ENT,    KC_SPC,  SYM_SPC, KC_RCMD, KC_ROPT, KC_RCTL
+),
+/*
+ * CORNE mode - laid over QWERTY/Colemak to practise on a Corne-size board (3 rows x 6 columns + 3 thumbs per side).
+ * Letters come from the base layer underneath; the number row and two outer thumb keys per side are off.
+ * Numbers/backtick are on SYM. Knobs still work.
+ * ,-----------------------------------------.                    ,-----------------------------------------.
+ * |  --  |  --  |  --  |  --  |  --  |  --  |                    |  --  |  --  |  --  |  --  |  --  |  --  |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * | Tab  |      |      |      |      |      |                    |      |      |      |      |      | Bspc |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * | Ctrl |      |      |      |      |      |-------.    ,-------|      |      |      |      |      |  '   |
+ * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
+ * |Shift |      |      |      |      |      |-------|    |-------|      |      |      |      |      | Esc  |
+ * `-----------------------------------------/       /     \      \-----------------------------------------'
+ *            |  --  |  --  | Opt  |NAV/Ent| / Cmd  /       \ Bspc \  |SYM/Spc| Cmd |  --  |  --  |
+ *            `----------------------------------'           '------''---------------------------'
+ */
+[_CORNE] = LAYOUT(
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_TAB,  _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______,
+    KC_LCTL, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______,   _______, _______, _______, _______, _______, _______, KC_ESC,
+                      XXXXXXX, XXXXXXX, KC_LOPT, _______, KC_LCMD,   KC_BSPC, _______, _______, XXXXXXX, XXXXXXX
 ),
 /*
  * NAV (red) - hold left thumb
@@ -118,7 +143,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * | Boot |      |QWERTY|COLMAK| OLED |      |                    |      |      |      |      |      |      |
+ * | Boot |      |QWERTY|COLMAK| OLED |CORNE |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |RGBTog| Hue+ | Sat+ | Bri+ | Mode+|      |-------.    ,-------|      | Vol- | Mute | Vol+ |      |      |
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
@@ -129,7 +154,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_ADJUST] = LAYOUT(
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    QK_BOOT, XXXXXXX, QWERTY,  COLEMAK, OLED_NXT,XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    QK_BOOT, XXXXXXX, QWERTY,  COLEMAK, OLED_NXT,CORNE,                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     RM_TOGG, RM_HUEU, RM_SATU, RM_VALU, RM_NEXT, XXXXXXX,                     XXXXXXX, KC_VOLD, KC_MUTE, KC_VOLU, XXXXXXX, XXXXXXX,
     XXXXXXX, RM_HUED, RM_SATD, RM_VALD, RM_PREV, XXXXXXX, _______,   _______, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,
                       _______, _______, _______, _______, _______,   _______, _______, _______, _______, _______
@@ -170,6 +195,7 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [_QWERTY]  = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(KC_MPRV, KC_MNXT) },
     [_COLEMAK] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(KC_MPRV, KC_MNXT) },
     [_NAV]     = { ENCODER_CCW_CW(_______, _______), ENCODER_CCW_CW(_______, _______) },
+    [_CORNE]   = { ENCODER_CCW_CW(_______, _______), ENCODER_CCW_CW(_______, _______) },
     [_SYM]     = { ENCODER_CCW_CW(_______, _______), ENCODER_CCW_CW(_______, _______) },
     [_ADJUST]  = { ENCODER_CCW_CW(RM_VALD, RM_VALU), ENCODER_CCW_CW(RM_SPDD, RM_SPDU) },
 };
