@@ -5,4 +5,3 @@ CONVERT_TO = rp2040_ce
 
 # OLED screens: status panel (left) + Luna / Bongo Cat / WPM / cheat sheet (right)
 WPM_ENABLE = yes
-SRC += oled.c

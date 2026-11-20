@@ -4,10 +4,25 @@
 // Starting point: the Sofle Choc build-guide default layout (macOS flavour),
 // plus a Colemak base layer. Red layer = NAV (left thumb), blue layer = SYM
 // (right thumb), hold both = ADJUST.
-#include "kedvall.h" // layer names, custom keycodes, OLED hooks
+#include QMK_KEYBOARD_H
 
-#define NAV     MO(_NAV)
-#define SYM     MO(_SYM)
+enum layers {
+    _QWERTY,
+    _COLEMAK,
+    _NAV,    // red
+    _SYM,    // blue
+    _ADJUST, // NAV + SYM held together
+};
+
+enum custom_keycodes {
+    OLED_NXT = QK_USER, // cycle the right screen: Luna -> Bongo Cat -> WPM -> cheat sheet
+};
+
+#ifdef OLED_ENABLE
+#    include "oled.c" // screens; uses the layer names above
+#endif
+
+// Inner thumb keys: tap for Enter / Space, hold for the layer.
 #define NAV_ENT LT(_NAV, KC_ENT)
 #define SYM_SPC LT(_SYM, KC_SPC)
 #define QWERTY  PDF(_QWERTY)   // persistent default layer (saved to EEPROM)

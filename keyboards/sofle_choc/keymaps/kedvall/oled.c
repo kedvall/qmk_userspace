@@ -14,7 +14,7 @@
 // Drawing goes into our own 512-byte framebuffer, which is then copied into
 // QMK's OLED buffer. QMK only re-sends bytes that changed, so redrawing
 // everything every frame is cheap.
-#include "kedvall.h"
+// Included from keymap.c (needs its layer names), not compiled on its own.
 #include <string.h>
 #include "transactions.h"
 #include "oled_font.h"
