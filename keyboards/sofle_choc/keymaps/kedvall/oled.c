@@ -42,6 +42,7 @@ static user_config_t user_config;
 typedef struct {
     uint8_t mode;
     uint8_t jump_count; // bumped on every Space press
+    bool    screen_on;  // whether the master's screen is on
 } oled_sync_t;
 
 static oled_sync_t sync_state;
@@ -83,12 +84,25 @@ void oled_housekeeping_user(void) {
     if (is_keyboard_master()) {
         static oled_sync_t last_sent;
         static uint32_t    last_sync;
+        sync_state.screen_on = is_oled_on();
         if (memcmp(&sync_state, &last_sent, sizeof(sync_state)) != 0 || timer_elapsed32(last_sync) > 1000) {
             if (transaction_rpc_send(USER_SYNC_OLED, sizeof(sync_state), &sync_state)) {
                 last_sent = sync_state;
                 last_sync = timer_read32();
             }
         }
+    } else {
+        // Other half: after a long sleep this screen sometimes stays dark when the
+        // master's comes back, and only a reset fixed it. So whenever the master's
+        // screen turns on, re-send the screen's full setup instead of just "display
+        // on", and keep retrying every 2 s if this screen still reports off.
+        static bool     master_was_on;
+        static uint32_t last_reinit;
+        if (sync_state.screen_on && (!master_was_on || (!is_oled_on() && timer_elapsed32(last_reinit) > 2000))) {
+            oled_init(OLED_ROTATION_0);
+            last_reinit = timer_read32();
+        }
+        master_was_on = sync_state.screen_on;
     }
 
     // Both halves: start a jump when the jump counter changes.
