@@ -35,6 +35,10 @@
 // key is still down (e.g. hold SYM, tap 1, release SYM -> "!"), even if quicker
 // than TAPPING_TERM. Normal typing rolls (Space released first) stay as Space.
 #define PERMISSIVE_HOLD
+// Flow Tap: if Space/Enter is pressed within 150 ms of the previous letter
+// (i.e. mid-sentence), it's a tap right away - no wait for release and no
+// chance of turning into NAV/SYM. Pause first to use it as a layer key.
+#define FLOW_TAP_TERM 150
 
 // ---- OLEDs (see oled.c) ----
 // Screens stay on for 30 min after the last keypress. They also switch off
