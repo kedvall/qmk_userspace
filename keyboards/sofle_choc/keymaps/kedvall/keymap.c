@@ -107,7 +107,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
  * |Shift |      |      |      |      | ^B   |-------|    |-------|      |      | PgDn | PgUp |      | Shift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *            |      |      |      |      | /       /       \      \  |      |      |      |      |
+ *            |      |      |      |      | /       /       \      \  |      | Del  |      |      |
  *            `----------------------------------'           '------''---------------------------'
  */
 [_NAV] = LAYOUT(
@@ -115,7 +115,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
     _______, KC_LOPT, KC_LCTL, KC_LSFT, KC_LCMD, KC_CAPS,                     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, XXXXXXX, KC_DEL,
     _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TMUX,    _______,   _______, XXXXXXX, KC_PGDN, KC_PGUP, XXXXXXX, XXXXXXX, _______,
-                      _______, _______, _______, _______, _______,   _______, _______, _______, _______, _______
+                      _______, _______, _______, _______, _______,   _______, _______, KC_DEL,  _______, _______
 ),
 /*
  * SYM (blue) - hold right thumb
