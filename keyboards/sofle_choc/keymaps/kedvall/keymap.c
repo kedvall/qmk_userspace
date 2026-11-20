@@ -18,9 +18,7 @@ enum custom_keycodes {
     OLED_NXT = QK_USER, // cycle the right screen: Luna -> Bongo Cat -> WPM -> cheat sheet
 };
 
-#ifdef OLED_ENABLE
-#    include "oled.c" // screens; uses the layer names above
-#endif
+#include "oled.c" // screens; uses the layer names above
 
 // Inner thumb keys: tap for Enter / Space, hold for the layer.
 #define NAV_ENT LT(_NAV, KC_ENT)
@@ -140,7 +138,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-#ifdef OLED_ENABLE
         case OLED_NXT:
             if (record->event.pressed) oled_next_mode();
             return false; // handled, nothing to send to the computer
@@ -150,21 +147,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case SYM_SPC:
             if (record->event.pressed && record->tap.count) oled_space_pressed(); // only when tapped
             return true;
-#endif
     }
     return true;
 }
 
 void keyboard_post_init_user(void) {
-#ifdef OLED_ENABLE
     oled_post_init_user();
-#endif
 }
 
 void housekeeping_task_user(void) {
-#ifdef OLED_ENABLE
     oled_housekeeping_user();
-#endif
 }
 
 // Holding both NAV and SYM turns on ADJUST.
