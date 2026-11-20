@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Regenerate compile_commands.json for CLion/clangd, plus an entry for keymap.c.
+# QMK never compiles keymap.c directly (it is #included by
+# quantum/keymap_introspection.c), so editors otherwise have no flags for it.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+KB=${1:-sofle_choc}
+KM=${2:-kedvall}
+qmk compile --compiledb -kb "$KB" -km "$KM"
+python3 - "$KB" "$KM" <<'PY'
+import json, os, sys
+kb, km = sys.argv[1:]
+db = json.load(open("compile_commands.json"))
+keymap = os.path.abspath(f"keyboards/{kb}/keymaps/{km}/keymap.c")
+src = next(e for e in db if e["file"].endswith("quantum/keymap_introspection.c"))
+entry = dict(src, file=keymap)
+if "arguments" in entry:
+    entry["arguments"] = [keymap if a.endswith("keymap_introspection.c") else a for a in entry["arguments"]]
+if "command" in entry:
+    entry["command"] = entry["command"].replace(src["file"], keymap)
+entry.pop("output", None)
+db = [e for e in db if e["file"] != keymap] + [entry]
+json.dump(db, open("compile_commands.json", "w"), indent=2)
+print(f"added compile_commands entry for {keymap}")
+PY
